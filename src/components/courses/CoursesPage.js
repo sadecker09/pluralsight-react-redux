@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import * as courseActions from "../../redux/actions/courseActions";
 import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
 
 class CoursesPage extends React.Component {
   // class field
@@ -20,7 +21,7 @@ class CoursesPage extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault(); // prevent postback
-    this.props.dispatch(courseActions.createCourse(this.state.course));
+    this.props.actions.createCourse(this.state.course);
   };
 
   render() {
@@ -43,8 +44,8 @@ class CoursesPage extends React.Component {
 }
 
 CoursesPage.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   courses: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -53,5 +54,14 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    //createCourse: (course) => dispatch(courseActions.createCourse(course)),  // less preferred option
+    actions: bindActionCreators(courseActions, dispatch),
+  };
+}
+// by declaring mapDispatchToProps and calling it in connect(), the dispatch is no longer injected
+// into the container; instead only the actions we specify in mapDispatchToProps are available
+
 // connect returns a function which then calls the CoursesPage component
-export default connect(mapStateToProps)(CoursesPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
