@@ -6,6 +6,8 @@ export default function courseReducer(state = [], action) {
     case types.CREATE_COURSE:
       // do not push directly onto state; return updated copy of state
       return [...state, { ...action.course }];
+    case types.LOAD_COURSES_SUCCESS:
+        return action.courses;
     default:
       // if reducer receive action it doesn't care about, return unchanged state
       return state;
