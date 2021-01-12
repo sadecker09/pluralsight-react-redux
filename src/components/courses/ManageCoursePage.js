@@ -5,7 +5,8 @@ import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseForm from "./CourseForm";
 import { newCourse } from "../../../tools/mockData";
-
+import Spinner from "../common/Spinner";
+import { toast } from "react-toastify";
 function ManageCoursePage({
   courses,
   authors,
@@ -22,16 +23,18 @@ function ManageCoursePage({
   // another option is to alias course in the destructuring
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     if (courses.length === 0) {
       loadCourses().catch((error) => {
         alert("Loading courses failed" + error);
       });
     } else {
-        // this will copy the course passed in on props to state
-        // anytime a new course is passed in on props since the useEffect hook
-        // is watching for changes to props.course
-        setCourse({...props.course})
+      // this will copy the course passed in on props to state
+      // anytime a new course is passed in on props since the useEffect hook
+      // is watching for changes to props.course
+      setCourse({ ...props.course });
     }
 
     if (authors.length === 0) {
@@ -42,8 +45,8 @@ function ManageCoursePage({
   }, [props.course]);
   // empty array in this argument would mean the effect will run once when the component mounts
   // effectively same as componentDidMount()
-  // but we should have it watch changes on props.course so that when a new course is 
-  // added on props, the effect will run and we can update state 
+  // but we should have it watch changes on props.course so that when a new course is
+  // added on props, the effect will run and we can update state
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -55,7 +58,9 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
+    setSaving(true);
     saveCourse(course).then(() => {
+      toast.success("Course Saved.");
       history.push("/courses");
       // can use <Redirect> or history.push to redirect
     });
@@ -64,13 +69,16 @@ function ManageCoursePage({
     // unbound saveCourse thunk thats imported at the top
   }
 
-  return (
+  return authors.length === 0 || courses.length === 0 ? (
+    <Spinner />
+  ) : (
     <CourseForm
       course={course}
       errors={errors}
       authors={authors}
       onChange={handleChange}
       onSave={handleSave}
+      saving={saving}
     />
   );
 }
