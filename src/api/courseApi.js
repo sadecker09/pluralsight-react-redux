@@ -16,6 +16,7 @@ export function saveCourse(course) {
 }
 
 export function deleteCourse(courseId) {
+  //return fetch(baseUrl + 1000, { method: "DELETE" }) // intentionally break deletion to test failed delete
   return fetch(baseUrl + courseId, { method: "DELETE" })
     .then(handleResponse)
     .catch(handleError);

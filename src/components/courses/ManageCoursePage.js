@@ -48,6 +48,18 @@ function ManageCoursePage({
   // but we should have it watch changes on props.course so that when a new course is
   // added on props, the effect will run and we can update state
 
+  function formIsValid() {
+    const { title, authorId, category } = course;
+    const errors = {};
+    if (!title) errors.title = "Title is required.";
+    if (!authorId) errors.author = "Author is required.";
+    if (!category) errors.category = "Category is required.";
+
+    setErrors(errors);
+    // Form is valid if the errors object still has no properties
+    return Object.keys(errors).length === 0;
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
     setCourse((prevCourse) => ({
@@ -58,12 +70,18 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
+    if (!formIsValid()) return;
     setSaving(true);
-    saveCourse(course).then(() => {
-      toast.success("Course Saved.");
-      history.push("/courses");
-      // can use <Redirect> or history.push to redirect
-    });
+    saveCourse(course)
+      .then(() => {
+        toast.success("Course Saved.");
+        history.push("/courses");
+        // can use <Redirect> or history.push to redirect
+      })
+      .catch((error) => {
+        setSaving(false);
+        setErrors({ onSave: error.message });
+      });
     // saveCourse is passed in on props and already bound to dispatch
     // the bound saveCourse function on props takes precedence over the
     // unbound saveCourse thunk thats imported at the top
