@@ -7,7 +7,10 @@ import CourseForm from "./CourseForm";
 import { newCourse } from "../../../tools/mockData";
 import Spinner from "../common/Spinner";
 import { toast } from "react-toastify";
-function ManageCoursePage({
+
+// the export here is to export the unconnected component for testing
+// the export at the very end is to export the connected component
+export function ManageCoursePage({
   courses,
   authors,
   loadAuthors,

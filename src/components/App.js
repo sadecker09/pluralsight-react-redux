@@ -5,7 +5,8 @@ import AboutPage from "./about/AboutPage";
 import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
 import CoursesPage from "./courses/CoursesPage";
-import ManageCoursePage from "./courses/ManageCoursePage";
+import ManageCoursePage from "./courses/ManageCoursePage"; // eslint-disable-line import/no-named-as-default
+// custom eslint line will disable the warning about importing the default instead of the named export
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
